@@ -1,0 +1,131 @@
+<div class="expertos-container">
+  <div class="section-header">
+    <h1>Registros CENDA</h1>
+    <button class="primary-btn" (click)="nuevoRegistroForm()">
+      <span class="material-icons">{{ mostrarFormularioRegistro && !editando ? 'close' : 'add' }}</span>
+      {{ mostrarFormularioRegistro && !editando ? 'Cancelar' : 'Nuevo Registro' }}
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <div *ngIf="mostrarFormularioRegistro" class="form-section">
+    <form #registroForm="ngForm" (ngSubmit)="submitRegistro()" class="evento-form">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select [(ngModel)]="nuevoRegistro.area" name="area" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccionar área</option>
+            <option *ngFor="let area of areas" [value]="area">{{area}}</option>
+          </select>
+        </div>
+
+        <!-- Autores -->
+        <div class="form-group">
+          <label for="autores">Autores</label>
+          <input type="text" [(ngModel)]="nuevoRegistro.autores" name="autores" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Título -->
+        <div class="form-group">
+          <label for="titulo">Título</label>
+          <input type="text" [(ngModel)]="nuevoRegistro.titulo" name="titulo" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+          <label for="categoria">Categoría</label>
+          <select [(ngModel)]="nuevoRegistro.categoria" name="categoria" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccionar categoría</option>
+            <option *ngFor="let cat of categorias" [value]="cat">{{cat}}</option>
+          </select>
+        </div>
+
+        <!-- Línea -->
+        <div class="form-group">
+          <label for="linea">Línea</label>
+          <input type="text" [(ngModel)]="nuevoRegistro.linea" name="linea" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Proyecto -->
+        <div class="form-group">
+          <label for="proyecto">Proyecto</label>
+          <input type="text" [(ngModel)]="nuevoRegistro.proyecto" name="proyecto" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea [(ngModel)]="nuevoRegistro.descripcion" name="descripcion" required
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight" 
+                    rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!registroForm.valid">
+          {{ editando ? 'Actualizar Registro' : 'Guardar Registro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>Autores</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Línea</th>
+            <th>Proyecto</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of registros; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{r.area}}</td>
+            <td>{{r.autores}}</td>
+            <td>{{r.titulo}}</td>
+            <td>{{r.descripcion}}</td>
+            <td>{{r.categoria}}</td>
+            <td>{{r.linea}}</td>
+            <td>{{r.proyecto}}</td>
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button class="icon-btn edit" (click)="editarRegistro(r)" title="Editar">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="icon-btn delete" (click)="eliminarRegistro(r.id!)" title="Eliminar">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="registros.length === 0">
+            <td colspan="9" class="empty-state">
+              <span class="material-icons">description</span>
+              <p>No hay registros</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>

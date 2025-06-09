@@ -1,0 +1,160 @@
+<div class="expertos-container">
+  <div class="section-header">
+    <h1>Libros y Capítulos</h1>
+    <button class="primary-btn" (click)="nuevoLibroForm()">
+      <span class="material-icons">{{ mostrarFormularioLibro && !editando ? 'close' : 'library_add' }}</span>
+      {{ mostrarFormularioLibro && !editando ? 'Cancelar' : 'Nuevo Libro' }}
+    </button>
+  </div>
+
+  <!-- Formulario Nuevo Libro -->
+  <div *ngIf="mostrarFormularioLibro" class="form-section">
+    <form #libroForm="ngForm" (ngSubmit)="submitLibro()" class="evento-form">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select [(ngModel)]="nuevoLibro.area" name="area" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccione área</option>
+            <option *ngFor="let area of areas" [value]="area">{{area}}</option>
+          </select>
+        </div>
+
+        <!-- Autores -->
+        <div class="form-group">
+          <label for="autores">Autores</label>
+          <input type="text" [(ngModel)]="nuevoLibro.autores" name="autores" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Título del Libro -->
+        <div class="form-group">
+          <label for="tituloLibro">Título del Libro</label>
+          <input type="text" [(ngModel)]="nuevoLibro.tituloLibro" name="tituloLibro" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Título del Capítulo -->
+        <div class="form-group">
+          <label for="tituloCapitulo">Título del Capítulo (opcional)</label>
+          <input type="text" [(ngModel)]="nuevoLibro.tituloCapitulo" name="tituloCapitulo"
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- ISBN -->
+        <div class="form-group">
+          <label for="isbn">ISBN</label>
+          <input type="text" [(ngModel)]="nuevoLibro.isbn" name="isbn" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Editorial -->
+        <div class="form-group">
+          <label for="editorial">Editorial</label>
+          <input type="text" [(ngModel)]="nuevoLibro.editorial" name="editorial" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Año -->
+        <div class="form-group">
+          <label for="ano">Año</label>
+          <input type="number" [(ngModel)]="nuevoLibro.ano" name="ano" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- País -->
+        <div class="form-group">
+          <label for="pais">País</label>
+          <input type="text" [(ngModel)]="nuevoLibro.pais" name="pais" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Grupo MES -->
+        <div class="form-group">
+          <label for="grupoMes">Grupo MES</label>
+          <select [(ngModel)]="nuevoLibro.grupoMes" name="grupoMes" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccione grupo</option>
+            <option *ngFor="let grupo of gruposMes" [value]="grupo">Grupo {{grupo}}</option>
+          </select>
+        </div>
+
+        <!-- URL -->
+        <div class="form-group">
+          <label for="url">Enlace (opcional)</label>
+          <input type="url" [(ngModel)]="nuevoLibro.url" name="url"
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!libroForm.valid">
+          {{ editando ? 'Actualizar Libro' : 'Guardar Libro' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de Libros -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>Título Libro</th>
+            <th>Capítulo</th>
+            <th>Autores</th>
+            <th>Editorial</th>
+            <th>Año</th>
+            <th>ISBN</th>
+            <th>País</th>
+            <th>Grupo</th>
+            <th>Enlace</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let libro of libros; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{ libro.area }}</td>
+            <td>{{ libro.tituloLibro }}</td>
+            <td>{{ libro.tituloCapitulo || '-' }}</td>
+            <td>{{ libro.autores }}</td>
+            <td>{{ libro.editorial }}</td>
+            <td>{{ libro.ano }}</td>
+            <td>{{ libro.isbn }}</td>
+            <td>{{ libro.pais }}</td>
+            <td>Grupo {{ libro.grupoMes }}</td>
+            <td>
+              {{ libro.url }}
+              
+            </td>
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button class="icon-btn edit" (click)="editarLibro(libro)" title="Editar">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="icon-btn delete" (click)="eliminarLibro(libro.id!)" title="Eliminar">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="libros.length === 0">
+            <td colspan="12" class="empty-state">
+              <span class="material-icons">book</span>
+              <p>No hay libros registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</div>

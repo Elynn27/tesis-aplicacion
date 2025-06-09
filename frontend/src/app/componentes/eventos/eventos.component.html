@@ -1,0 +1,315 @@
+<div class="eventos-container">
+  <!-- Header Section -->
+  <div class="section-header">
+    <h1>Gestión de Eventos</h1>
+    <button class="primary-btn" (click)="mostrarFormularioEvento = !mostrarFormularioEvento">
+      <span class="material-icons">
+        {{ mostrarFormularioEvento ? 'close' : 'add' }}
+      </span>
+      {{ mostrarFormularioEvento ? 'Cancelar' : 'Nuevo Evento' }}
+    </button>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-section" *ngIf="mostrarFormularioEvento" [@fadeSlide]>
+    <form (ngSubmit)="agregarEvento()" #eventoForm="ngForm" class="evento-form" novalidate>
+      <div class="form-grid">
+
+        <!-- Campo: Título -->
+        <div class="form-group">
+          <label for="titulo">Título</label>
+          <input
+            type="text"
+            id="titulo"
+            name="titulo"
+            [(ngModel)]="nuevoEvento.titulo"
+            #tituloModel="ngModel"
+            required
+            minlength="3"
+            maxlength="100"
+            pattern="^[A-Za-z0-9¡!¿?áéíóúÁÉÍÓÚñÑ\s]+$"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <!-- Mensajes de error para Título -->
+          <div class="text-red-600 text-sm mt-1" *ngIf="tituloModel.invalid && (tituloModel.dirty || tituloModel.touched)">
+            <div *ngIf="tituloModel.errors?.['required']">
+              El título es obligatorio.
+            </div>
+            <div *ngIf="tituloModel.errors?.['minlength']">
+              El título debe tener al menos 3 caracteres.
+            </div>
+            <div *ngIf="tituloModel.errors?.['maxlength']">
+              El título no puede exceder 100 caracteres.
+            </div>
+            <div *ngIf="tituloModel.errors?.['pattern']">
+              El título no puede contener símbolos especiales (solo letras, números y espacios).
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select
+            id="area"
+            name="area"
+            [(ngModel)]="nuevoEvento.area"
+            #areaModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione área</option>
+            <option>CITEC</option>
+            <option>FTI</option>
+            <option>FTL</option>
+            <option>FTE</option>
+            <option>FIO</option>
+            <option>FCS</option>
+          </select>
+          <div class="text-red-600 text-sm mt-1" *ngIf="areaModel.invalid && (areaModel.dirty || areaModel.touched)">
+            <div *ngIf="areaModel.errors?.['required']">
+              Debes seleccionar un área.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Autores -->
+        <div class="form-group">
+          <label for="autores">Autores</label>
+          <input
+            type="text"
+            id="autores"
+            name="autores"
+            [(ngModel)]="nuevoEvento.autores"
+            #autoresModel="ngModel"
+            required
+            minlength="3"
+            maxlength="150"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div class="text-red-600 text-sm mt-1" *ngIf="autoresModel.invalid && (autoresModel.dirty || autoresModel.touched)">
+            <div *ngIf="autoresModel.errors?.['required']">
+              El campo autores es obligatorio.
+            </div>
+            <div *ngIf="autoresModel.errors?.['minlength']">
+              Debes ingresar al menos 3 caracteres.
+            </div>
+            <div *ngIf="autoresModel.errors?.['maxlength']">
+              No puedes exceder 150 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Fecha -->
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input
+            type="date"
+            id="fecha"
+            name="fecha"
+            [(ngModel)]="nuevoEvento.fecha"
+            #fechaModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div class="text-red-600 text-sm mt-1" *ngIf="fechaModel.invalid && (fechaModel.dirty || fechaModel.touched)">
+            <div *ngIf="fechaModel.errors?.['required']">
+              La fecha es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Lugar -->
+        <div class="form-group">
+          <label for="lugar">Lugar</label>
+          <input
+            type="text"
+            id="lugar"
+            name="lugar"
+            [(ngModel)]="nuevoEvento.lugar"
+            #lugarModel="ngModel"
+            required
+            minlength="3"
+            maxlength="100"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div class="text-red-600 text-sm mt-1" *ngIf="lugarModel.invalid && (lugarModel.dirty || lugarModel.touched)">
+            <div *ngIf="lugarModel.errors?.['required']">
+              El lugar es obligatorio.
+            </div>
+            <div *ngIf="lugarModel.errors?.['minlength']">
+              Debes ingresar al menos 3 caracteres.
+            </div>
+            <div *ngIf="lugarModel.errors?.['maxlength']">
+              No puedes exceder 100 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Categoría -->
+        <div class="form-group">
+          <label for="categoria">Categoría</label>
+          <select
+            id="categoria"
+            name="categoria"
+            [(ngModel)]="nuevoEvento.categoria"
+            #categoriaModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione Categoría</option>
+            <option>Institucionales</option>
+            <option>Nacionales</option>
+            <option>Internacionales</option>
+            <option>Internacionales en Cuba</option>
+          </select>
+          <div class="text-red-600 text-sm mt-1" *ngIf="categoriaModel.invalid && (categoriaModel.dirty || categoriaModel.touched)">
+            <div *ngIf="categoriaModel.errors?.['required']">
+              Debes seleccionar una categoría.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Línea de Investigación (opcional) -->
+        <div class="form-group">
+          <label for="linea">Línea de Investigación</label>
+          <input
+            type="text"
+            id="linea"
+            name="linea"
+            [(ngModel)]="nuevoEvento.linea"
+            #lineaModel="ngModel"
+            minlength="3"
+            maxlength="100"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div class="text-red-600 text-sm mt-1" *ngIf="lineaModel.invalid && (lineaModel.dirty || lineaModel.touched) && (lineaModel.errors?.['minlength'] || lineaModel.errors?.['maxlength'])">
+            <div *ngIf="lineaModel.errors?.['minlength']">
+              Al menos 3 caracteres para la línea de investigación.
+            </div>
+            <div *ngIf="lineaModel.errors?.['maxlength']">
+              Máximo 100 caracteres para la línea de investigación.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Proyecto (opcional) -->
+        <div class="form-group">
+          <label for="proyecto">Proyecto</label>
+          <input
+            type="text"
+            id="proyecto"
+            name="proyecto"
+            [(ngModel)]="nuevoEvento.proyecto"
+            #proyectoModel="ngModel"
+            minlength="3"
+            maxlength="100"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div class="text-red-600 text-sm mt-1" *ngIf="proyectoModel.invalid && (proyectoModel.dirty || proyectoModel.touched) && (proyectoModel.errors?.['minlength'] || proyectoModel.errors?.['maxlength'])">
+            <div *ngIf="proyectoModel.errors?.['minlength']">
+              Al menos 3 caracteres para el proyecto.
+            </div>
+            <div *ngIf="proyectoModel.errors?.['maxlength']">
+              Máximo 100 caracteres para el proyecto.
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo: Descripción -->
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            [(ngModel)]="nuevoEvento.descripcion"
+            #descripcionModel="ngModel"
+            required
+            minlength="10"
+            maxlength="500"
+            rows="3"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          ></textarea>
+          <div class="text-red-600 text-sm mt-1" *ngIf="descripcionModel.invalid && (descripcionModel.dirty || descripcionModel.touched)">
+            <div *ngIf="descripcionModel.errors?.['required']">
+              La descripción es obligatoria.
+            </div>
+            <div *ngIf="descripcionModel.errors?.['minlength']">
+              Debes ingresar al menos 10 caracteres.
+            </div>
+            <div *ngIf="descripcionModel.errors?.['maxlength']">
+              No puedes exceder 500 caracteres.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="cancelarFormulario()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="primary-btn"
+          [disabled]="eventoForm.form.invalid"
+        >
+          Guardar Evento
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Área</th>
+            <th>Autores</th>
+            <th>Fecha</th>
+            <th>Lugar</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let evento of eventos">
+            <td>{{ evento.titulo }}</td>
+            <td>{{ evento.area }}</td>
+            <td>{{ evento.autores }}</td>
+            <td>{{ evento.fecha | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ evento.lugar }}</td>
+            <td class="actions-cell">
+              <button
+                class="icon-btn edit"
+                (click)="editarEvento(evento)"
+                title="Editar"
+              >
+                <span class="material-icons">edit</span>
+              </button>
+              <button
+                class="icon-btn delete"
+                (click)="confirmarEliminar(evento)"
+                title="Eliminar"
+              >
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="eventos.length === 0">
+            <td colspan="6" class="empty-state">
+              <span class="material-icons">event_busy</span>
+              <p>No hay eventos registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

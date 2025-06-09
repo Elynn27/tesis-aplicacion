@@ -1,0 +1,32 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #0ea5e9;
+$danger-color: #ef4444;
+$success-color: #22c55e;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$border-color: #e2e8f0;
+$background-light: #f8fafc;
+$background-white: #ffffff;
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 72px;
+$header-height: 64px;
+$border-radius: 12px;
+$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$transition-speed: 0.2s;
+$row-alternate: #f8fafc;
+$header-background: #758bd3;
+$row-hover: #e0f2fe;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

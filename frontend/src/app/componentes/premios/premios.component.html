@@ -1,0 +1,205 @@
+<div class="expertos-container">
+  <div class="section-header">
+    <h1>Premios y Reconocimientos</h1>
+    <button class="primary-btn" (click)="nuevoPremioForm()">
+      <span class="material-icons">{{ mostrarFormularioPremio && !editando ? 'close' : 'emoji_events' }}</span>
+      {{ mostrarFormularioPremio && !editando ? 'Cancelar' : 'Nuevo Premio' }}
+    </button>
+  </div>
+
+  <!-- Formulario -->
+  <div *ngIf="mostrarFormularioPremio" class="form-section">
+    <form #premioForm="ngForm" (ngSubmit)="submitPremio()" class="evento-form">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select [(ngModel)]="nuevoPremio.area" name="area" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccionar área</option>
+            <option *ngFor="let area of areas" [value]="area">{{area}}</option>
+          </select>
+        </div>
+
+        <!-- Autores premiados -->
+        <div class="form-group">
+          <label for="autores">Autores premiados</label>
+          <input type="text" [(ngModel)]="nuevoPremio.autores" name="autores" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+                 placeholder="Separados por comas">
+        </div>
+
+        <!-- Título del resultado -->
+        <div class="form-group">
+          <label for="tituloResultado">Título del resultado premiado</label>
+          <input type="text" [(ngModel)]="nuevoPremio.tituloResultado" name="tituloResultado" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Tipo de Resultado -->
+        <div class="form-group">
+          <label for="tipoResultado">Tipo de Resultado</label>
+          <select [(ngModel)]="nuevoPremio.tipoResultado" name="tipoResultado" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+                  (change)="onTipoResultadoChange()">
+            <option value="">Seleccionar tipo</option>
+            <option *ngFor="let tipo of tiposResultado" [value]="tipo">{{tipo}}</option>
+          </select>
+        </div>
+
+        <!-- Campos condicionales -->
+        <!-- Premios ACC -->
+        <div class="form-group" *ngIf="nuevoPremio.tipoResultado === 'Premios ACC'">
+          <label for="premioACC">Premios ACC</label>
+          <select [(ngModel)]="nuevoPremio.premioACC" name="premioACC" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="Entidad Principal">Entidad Principal</option>
+            <option value="Otras Entidades">Otras Entidades</option>
+          </select>
+        </div>
+
+        <!-- Otros Nacionales -->
+        <div class="form-group" *ngIf="nuevoPremio.tipoResultado === 'Otros Nacionales'">
+          <label for="otrosNacionales">Otros Nacionales</label>
+          <select [(ngModel)]="nuevoPremio.otrosNacionales" name="otrosNacionales" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="Premios Nacionales de Innovación Tecnológica">Premios Nacionales de Innovación Tecnológica</option>
+            <option value="Premios especiales del CITMA">Premios especiales del CITMA</option>
+            <option value="Premios Nacionales de otros OACE">Premios Nacionales de otros OACE</option>
+          </select>
+        </div>
+
+        <!-- Provinciales -->
+        <div *ngIf="nuevoPremio.tipoResultado === 'Provinciales'">
+          <div class="form-group">
+            <label for="provincialesTipo">Tipo de Premio Provincial</label>
+            <select [(ngModel)]="nuevoPremio.provinciales.tipo" name="provincialesTipo" required
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+              <option value="">Seleccionar tipo</option>
+              <option value="Premios CITMA provinciales a resultados de I+D">Premios CITMA provinciales a resultados de I+D</option>
+              <option value="Premio CITMA Provincial de innovación">Premio CITMA Provincial de innovación</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="provincialesProvincia">Provincia</label>
+            <input type="text" [(ngModel)]="nuevoPremio.provinciales.provincia" name="provincialesProvincia" required
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+          </div>
+          <div class="form-group">
+            <label for="provincialesEjecutor">Ejecutor principal (opcional)</label>
+            <input type="text" [(ngModel)]="nuevoPremio.provinciales.ejecutor" name="provincialesEjecutor"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+          </div>
+          <div class="form-group">
+            <label for="provincialesParticipante">Participante (opcional)</label>
+            <input type="text" [(ngModel)]="nuevoPremio.provinciales.participante" name="provincialesParticipante"
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+          </div>
+        </div>
+
+        <!-- Estudiantiles -->
+        <div *ngIf="nuevoPremio.tipoResultado === 'Estudiantiles'">
+          <div class="form-group">
+            <label for="estudiantilesConcurso">Concurso</label>
+            <select [(ngModel)]="nuevoPremio.estudiantiles.concurso" name="estudiantilesConcurso" required
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+              <option value="">Seleccionar concurso</option>
+              <option value="Concurso Nacional de Computación para Estudiantes Universitarios">Concurso Nacional de Computación</option>
+              <option value="Fórum Nacional de Estudiantes Universitarios">Fórum Nacional de Estudiantes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estudiantilesCategoria">Categoría</label>
+            <select [(ngModel)]="nuevoPremio.estudiantiles.categoria" name="estudiantilesCategoria" required
+                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+              <option value="">Seleccionar categoría</option>
+              <option value="Relevante">Relevante</option>
+              <option value="Destacado">Destacado</option>
+              <option value="Mencion">Mención</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" [(ngModel)]="nuevoPremio.fecha" name="fecha" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Proyecto Relacionado -->
+        <div class="form-group">
+          <label for="proyecto">Proyecto Relacionado</label>
+          <input type="text" [(ngModel)]="nuevoPremio.proyecto" name="proyecto" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!premioForm.valid">
+          {{ editando ? 'Actualizar Premio' : 'Guardar Premio' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla de Premios -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>Tipo</th>
+            <th>Premio</th>
+            <th>Fecha</th>
+            <th>Proyecto</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let premio of premios; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{ premio.area }}</td>
+            <td>{{ premio.tipoResultado }}</td>
+            <td>
+              <span *ngIf="premio.tipoResultado === 'Premios ACC'">{{premio.premioACC}}</span>
+              <span *ngIf="premio.tipoResultado === 'Otros Nacionales'">{{premio.otrosNacionales}}</span>
+              <span *ngIf="premio.tipoResultado === 'Provinciales'">
+                {{premio.provinciales?.tipo}} - {{premio.provinciales?.provincia}}
+              </span>
+              <span *ngIf="premio.tipoResultado === 'Estudiantiles'">
+                {{premio.estudiantiles?.concurso}} ({{premio.estudiantiles?.categoria}})
+              </span>
+            </td>
+            <td>{{ premio.fecha | date:'dd/MM/yyyy' }}</td>
+            <td>{{ premio.proyecto }}</td>
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button class="icon-btn edit" (click)="editarPremio(premio)" title="Editar">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="icon-btn delete" (click)="eliminarPremio(premio.id!)" title="Eliminar">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="premios.length === 0">
+            <td colspan="7" class="empty-state">
+              <span class="material-icons">emoji_events</span>
+              <p>No hay premios registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="errorMsg" class="error-message">
+    {{ errorMsg }}
+  </div>
+</div>

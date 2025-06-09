@@ -1,0 +1,143 @@
+<div class="expertos-container">
+  <div class="section-header">
+    <h1>Gestión de Publicaciones Científicas</h1>
+    <button class="primary-btn" (click)="toggleFormulario()">
+      <span class="material-icons">{{ mostrarFormulario ? 'close' : 'add' }}</span>
+      {{ mostrarFormulario ? 'Cancelar' : 'Nueva Publicación' }}
+    </button>
+  </div>
+
+  <!-- Formulario Compacto -->
+  <div class="form-section" *ngIf="mostrarFormulario">
+    <form (submit)="submitPublicacion()" class="form-grid">
+      <!-- Fila 1: Área y Grupo MES -->
+      <div class="form-group">
+        <label>Área</label>
+        <select [(ngModel)]="nuevaPublicacion.area" name="area" required class="compact-input">
+          <option value="">Seleccionar área</option>
+          <option *ngFor="let area of areas" [value]="area">{{area}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Grupo MES</label>
+        <select [(ngModel)]="nuevaPublicacion.grupoMes" name="grupoMes" required class="compact-input">
+          <option value="">Seleccionar grupo</option>
+          <option *ngFor="let grupo of gruposMes" [value]="grupo">Grupo {{grupo}}</option>
+        </select>
+      </div>
+
+      <!-- Fila 2: Línea y Año -->
+      <div class="form-group">
+        <label>Línea</label>
+        <select [(ngModel)]="nuevaPublicacion.linea" name="linea" required class="compact-input">
+          <option value="">Seleccionar línea</option>
+          <option *ngFor="let linea of lineas" [value]="linea">{{linea}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Año</label>
+        <input type="number" [(ngModel)]="nuevaPublicacion.ano" name="ano" required 
+               class="compact-input" min="1900" [max]="currentYear">
+      </div>
+
+      <!-- Fila 3: Título y Revista -->
+      <div class="form-group full-width">
+        <label>Título del Artículo</label>
+        <input type="text" [(ngModel)]="nuevaPublicacion.titulo" name="titulo" required 
+               class="compact-input">
+      </div>
+
+      <div class="form-group full-width">
+        <label>Revista</label>
+        <input type="text" [(ngModel)]="nuevaPublicacion.revista" name="revista" required 
+               class="compact-input">
+      </div>
+
+      <!-- Fila 4: Autores y URL -->
+      <div class="form-group full-width">
+        <label>Autores</label>
+        <input type="text" [(ngModel)]="nuevaPublicacion.autores" name="autores" required 
+               class="compact-input" placeholder="Separados por comas">
+      </div>
+
+      <div class="form-group full-width">
+        <label>Enlace</label>
+        <input type="url" [(ngModel)]="nuevaPublicacion.url" name="url" required 
+               class="compact-input">
+      </div>
+
+      <!-- Fila 5: Campos secundarios -->
+      <div class="form-group">
+        <label>No. y Vol.</label>
+        <input  type="text" [(ngModel)]="nuevaPublicacion.numeroVolumen" name="numeroVolumen"
+               class="compact-input">
+      </div>
+
+      <div class="form-group">
+        <label>ISSN</label>
+        
+        <input placeholder=" EJ.1026-0994" type="text" [(ngModel)]="nuevaPublicacion.issn" name="issn"
+               class="compact-input" pattern="\d{4}-\d{3}[\dX]">
+      </div>
+
+      <div class="form-group">
+        <label>Base de Datos</label>
+        <input type="text" [(ngModel)]="nuevaPublicacion.baseDatos" name="baseDatos"
+               class="compact-input">
+      </div>
+
+      <!-- Acciones del Formulario -->
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!validarFormulario()">
+          {{ publicacionEditando ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla Optimizada -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th width="5%">No.</th>
+            <th>Título</th>
+            <th width="10%">Área</th>
+            <th width="10%">Año</th>
+            <th width="15%">Autores</th>
+            <th width="10%">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of publicaciones; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{p.titulo}}</td>
+            <td>{{p.area}}</td>
+            <td>{{p.ano}}</td>
+            <td class="truncate-cell">{{p.autores | slice:0:30}}...</td>
+            <td class="actions-cell">
+              <button class="icon-btn edit" (click)="editarPublicacion(p)" title="Editar">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="icon-btn delete" (click)="eliminarPublicacion(p.id)" title="Eliminar">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="publicaciones.length === 0">
+            <td colspan="6" class="empty-state">
+              <span class="material-icons">article</span>
+              <p>No hay publicaciones registradas</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

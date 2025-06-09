@@ -1,0 +1,132 @@
+<div class="expertos-container">
+  <div class="section-header">
+    <h1>Gestión de Expertos</h1>
+    <button class="primary-btn" (click)="nuevoExpertoForm()">
+      <span class="material-icons">{{ mostrarFormularioExperto && !editando ? 'close' : 'person_add' }}</span>
+      {{ mostrarFormularioExperto && !editando ? 'Cancelar' : 'Nuevo Experto' }}
+    </button>
+  </div>
+
+
+  <!-- Form Section -->
+  <div class="form-section" *ngIf="mostrarFormularioExperto">
+    <form #expertoForm="ngForm" (ngSubmit)="submitExperto()" class="evento-form">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select [(ngModel)]="nuevoExperto.area" name="area" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccione área</option>
+            <option>CITEC</option>
+            <option>FTI</option>
+            <option>FTL</option>
+            <option>FTE</option>
+            <option>FIO</option>
+            <option>FCS</option>
+            <option>CENED</option>
+          </select>
+        </div>
+
+        <!-- Nombre y Apellidos -->
+        <div class="form-group">
+          <label for="nombreApellidos">Nombre y Apellidos</label>
+          <input type="text" [(ngModel)]="nuevoExperto.nombreApellidos" name="nombreApellidos" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Grado Científico -->
+        <div class="form-group">
+          <label for="gradoCientifico">Grado Científico</label>
+          <input type="text" [(ngModel)]="nuevoExperto.gradoCientifico" name="gradoCientifico" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Área del Conocimiento -->
+        <div class="form-group">
+          <label for="areaConocimiento">Área del Conocimiento</label>
+          <input type="text" [(ngModel)]="nuevoExperto.areaConocimiento" name="areaConocimiento" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+
+        <!-- Instancia Asesora -->
+        <div class="form-group">
+          <label for="instanciaAsesora">Instancia Asesora</label>
+          <select [(ngModel)]="nuevoExperto.instanciaAsesora" name="instanciaAsesora" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccione instancia</option>
+            <option>Macroprograma</option>
+            <option>Programa</option>
+            <option>Proyecto</option>
+            <option>Grupo Temporal de Trabajo</option>
+            <option>Consejo Técnico Asesor</option>
+            <option>Otros</option>
+          </select>
+        </div>
+
+        <!-- Nombre del Programa -->
+        <div class="form-group">
+          <label for="programa">Nombre del Programa</label>
+          <input type="text" [(ngModel)]="nuevoExperto.programa" name="programa" required
+                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!expertoForm.valid">
+          {{ editando ? 'Actualizar Experto' : 'Guardar Experto' }}
+        </button>
+      </div>
+    </form>
+  </div>
+ <!-- Table Section -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>Nombre</th>
+            <th>Grado</th>
+            <th>Área Conoc.</th>
+            <th>Instancia</th>
+            <th>Programa</th>
+            <th>Acciones</th> <!-- Nueva columna para acciones -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of listado; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{e.area}}</td>
+            <td>{{e.nombreApellidos}}</td>
+            <td>{{e.gradoCientifico}}</td>
+            <td>{{e.areaConocimiento}}</td>
+            <td>{{e.instanciaAsesora}}</td>
+            <td>{{e.programa}}</td>
+            <td class="actions-cell">
+              
+              <div class="action-buttons">
+                <button class="icon-btn edit" (click)="editarExperto(e)" title="Editar">
+                  <span class="material-icons">edit</span>
+                </button>
+                <button class="icon-btn delete" (click)="eliminarExperto(e.id)" title="Eliminar">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="listado.length === 0">
+            <td colspan="8" class="empty-state">
+              <span class="material-icons">person_off</span>
+              <p>No hay expertos registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

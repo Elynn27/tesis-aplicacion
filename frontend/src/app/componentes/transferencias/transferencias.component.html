@@ -1,0 +1,149 @@
+<div class="transferencias-container">
+  <!-- Header -->
+  <div class="section-header">
+    <h1>Transferencias de Tecnología</h1>
+    <button class="primary-btn" (click)="toggleFormulario()">
+      <span class="material-icons">
+        {{ mostrarFormulario && !modoEdicion ? 'close' : 'add' }}
+      </span>
+      {{ mostrarFormulario && !modoEdicion ? 'Cancelar' : (modoEdicion ? 'Cancelar Edición' : 'Agregar Transferencia') }}
+    </button>
+  </div>
+
+  <!-- Form Section -->
+  <div *ngIf="mostrarFormulario" class="form-section">
+    <form #transferForm="ngForm" (ngSubmit)="modoEdicion ? actualizarTransferencia() : agregarTransferencia()">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select id="area" name="area" required
+                  [(ngModel)]="formModel.area" class="w-full py-2 px-3 border rounded">
+            <option value="">Seleccionar área</option>
+            <option *ngFor="let a of areas" [value]="a">{{ a }}</option>
+          </select>
+        </div>
+
+        <!-- Número -->
+        <div class="form-group">
+          <label for="numero">No.</label>
+          <input id="numero" type="number" name="numero" required min="1"
+                 [(ngModel)]="formModel.numero" class="w-full py-2 px-3 border rounded">
+        </div>
+
+        <!-- Tecnología -->
+        <div class="form-group">
+          <label for="tecnologia">Tecnología Transferida</label>
+          <input id="tecnologia" type="text" name="tecnologia" required
+                 [(ngModel)]="formModel.tecnologia" class="w-full py-2 px-3 border rounded">
+        </div>
+
+        <!-- Valor Total -->
+        <div class="form-group">
+          <label for="valorTotal">Valor Total</label>
+          <input id="valorTotal" type="number" name="valorTotal" required step="0.01" min="0"
+                 [(ngModel)]="formModel.valorTotal" class="w-full py-2 px-3 border rounded">
+        </div>
+
+        <!-- Sector Estratégico -->
+        <div class="form-group">
+          <label for="sectorEstrategico">Sector Estratégico</label>
+          <select id="sectorEstrategico" name="sectorEstrategico" required
+                  [(ngModel)]="formModel.sectorEstrategico" class="w-full py-2 px-3 border rounded">
+            <option value="">Seleccionar sector</option>
+            <option *ngFor="let s of sectoresEstrategicos" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+        <!-- Servicios -->
+        <div class="form-group">
+          <label>Equipamiento</label>
+          <input type="number" name="equipamiento" min="0"
+                 [(ngModel)]="formModel.equipamiento" class="w-full py-2 px-3 border rounded">
+        </div>
+        <div class="form-group">
+          <label>Asistencia técnica</label>
+          <input type="number" name="asistenciaTecnica" min="0"
+                 [(ngModel)]="formModel.asistenciaTecnica" class="w-full py-2 px-3 border rounded">
+        </div>
+        <div class="form-group">
+          <label>Propiedad Intelectual</label>
+          <input type="number" name="propiedadIntelectual" min="0"
+                 [(ngModel)]="formModel.propiedadIntelectual" class="w-full py-2 px-3 border rounded">
+        </div>
+        <div class="form-group">
+          <label>Formación y Entrenamiento</label>
+          <input type="number" name="formacionEntrenamiento" min="0"
+                 [(ngModel)]="formModel.formacionEntrenamiento" class="w-full py-2 px-3 border rounded">
+        </div>
+
+        <!-- Otros -->
+        <div class="form-group full-width">
+          <label for="otros">Otros</label>
+          <input id="otros" type="text" name="otros"
+                 [(ngModel)]="formModel.otros" class="w-full py-2 px-3 border rounded">
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" rows="3"
+                    [(ngModel)]="formModel.descripcion"
+                    class="w-full py-2 px-3 border rounded"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!transferForm.valid">
+          {{ modoEdicion ? 'Actualizar Transferencia' : 'Guardar Transferencia' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>No.</th>
+            <th>Tecnología</th>
+            <th>Valor Total</th>
+            <th>Sector</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of datos; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ t.area }}</td>
+            <td>{{ t.numero }}</td>
+            <td>{{ t.tecnologia }}</td>
+            <td>{{ t.valorTotal | currency }}</td>
+            <td>{{ t.sectorEstrategico }}</td>
+            <td class="actions-cell">
+              <button class="icon-btn edit" (click)="iniciarEdicion(t)" title="Editar">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="icon-btn delete" (click)="eliminarTransferencia(t.id!)" title="Eliminar">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="datos.length === 0">
+            <td colspan="7" class="empty-state">
+              <span class="material-icons">inventory_2</span>
+              <p>No hay transferencias registradas</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

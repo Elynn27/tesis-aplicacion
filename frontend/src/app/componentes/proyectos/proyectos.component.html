@@ -1,0 +1,475 @@
+<div class="expertos-container">
+  <!-- Header Section -->
+  <div class="section-header">
+    <h1>Gestión de Proyectos</h1>
+    <button class="primary-btn" (click)="mostrarFormulario()">
+      <span class="material-icons">
+        {{ mostrarFormularioProyecto ? 'close' : 'add' }}
+      </span>
+      {{ mostrarFormularioProyecto ? 'Cancelar' : 'Nuevo Proyecto' }}
+    </button>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-section" *ngIf="mostrarFormularioProyecto">
+    <form
+      #proyectoForm="ngForm"
+      (ngSubmit)="submitProyecto()"
+      class="evento-form"
+      novalidate
+    >
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select
+            id="area"
+            name="area"
+            [(ngModel)]="newProyecto.area"
+            #areaModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione área</option>
+            <option *ngFor="let area of areas" [value]="area">
+              {{ area }}
+            </option>
+          </select>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              areaModel.invalid &&
+              (areaModel.dirty || areaModel.touched)
+            "
+          >
+            <div *ngIf="areaModel.errors?.['required']">
+              El área es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <!-- Código -->
+        <div class="form-group">
+          <label for="codigo">Código</label>
+          <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            [(ngModel)]="newProyecto.codigo"
+            #codigoModel="ngModel"
+            required
+            minlength="3"
+            maxlength="20"
+            pattern="^[A-Za-z0-9\-]+$"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              codigoModel.invalid &&
+              (codigoModel.dirty || codigoModel.touched)
+            "
+          >
+            <div *ngIf="codigoModel.errors?.['required']">
+              El código es obligatorio.
+            </div>
+            <div *ngIf="codigoModel.errors?.['minlength']">
+              Al menos 3 caracteres.
+            </div>
+            <div *ngIf="codigoModel.errors?.['maxlength']">
+              Máximo 20 caracteres.
+            </div>
+            <div *ngIf="codigoModel.errors?.['pattern']">
+              Solo letras, números y guiones.
+            </div>
+          </div>
+        </div>
+
+        <!-- Título del Proyecto I+D+i -->
+        <div class="form-group">
+          <label for="titulo">Título del Proyecto I+D+i</label>
+          <input
+            type="text"
+            id="titulo"
+            name="titulo"
+            [(ngModel)]="newProyecto.titulo"
+            #tituloModel="ngModel"
+            required
+            minlength="5"
+            maxlength="200"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              tituloModel.invalid &&
+              (tituloModel.dirty || tituloModel.touched)
+            "
+          >
+            <div *ngIf="tituloModel.errors?.['required']">
+              El título es obligatorio.
+            </div>
+            <div *ngIf="tituloModel.errors?.['minlength']">
+              Al menos 5 caracteres.
+            </div>
+            <div *ngIf="tituloModel.errors?.['maxlength']">
+              Máximo 200 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Clasificación -->
+        <div class="form-group">
+          <label for="clasificacion">Clasificación</label>
+          <select
+            id="clasificacion"
+            name="clasificacion"
+            [(ngModel)]="newProyecto.clasificacion"
+            #clasifModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+            (ngModelChange)="onClasificacionChange()"
+          >
+            <option value="">Seleccione clasificación</option>
+            <option *ngFor="let clasificacion of clasificaciones" [value]="clasificacion">
+              {{ clasificacion }}
+            </option>
+          </select>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              clasifModel.invalid &&
+              (clasifModel.dirty || clasifModel.touched)
+            "
+          >
+            <div *ngIf="clasifModel.errors?.['required']">
+              La clasificación es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <!-- Título del Programa -->
+        <div class="form-group">
+          <label for="tituloPrograma">Título del Programa</label>
+          <input
+            type="text"
+            id="tituloPrograma"
+            name="tituloPrograma"
+            [(ngModel)]="newProyecto.tituloPrograma"
+            #progModel="ngModel"
+            required
+            minlength="5"
+            maxlength="150"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              progModel.invalid &&
+              (progModel.dirty || progModel.touched)
+            "
+          >
+            <div *ngIf="progModel.errors?.['required']">
+              El título del programa es obligatorio.
+            </div>
+            <div *ngIf="progModel.errors?.['minlength']">
+              Al menos 5 caracteres.
+            </div>
+            <div *ngIf="progModel.errors?.['maxlength']">
+              Máximo 150 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo (solo si clasificación === 'PAPN') -->
+        <div class="form-group">
+          <label for="tipo">Tipo</label>
+          <select
+            id="tipo"
+            name="tipo"
+            [(ngModel)]="newProyecto.tipo"
+            #tipoModel="ngModel"
+            [disabled]="newProyecto.clasificacion !== 'PAPN'"
+            [required]="newProyecto.clasificacion === 'PAPN'"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione tipo</option>
+            <option *ngFor="let tipo of tipos" [value]="tipo">
+              {{ tipo }}
+            </option>
+          </select>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              newProyecto.clasificacion === 'PAPN' &&
+              tipoModel.invalid &&
+              (tipoModel.dirty || tipoModel.touched)
+            "
+          >
+            <div *ngIf="tipoModel.errors?.['required']">
+              Debes seleccionar un tipo para PAPN.
+            </div>
+          </div>
+        </div>
+
+        <!-- Sector Estratégico -->
+        <div class="form-group">
+          <label for="sectorEstrategico">Sector Estratégico</label>
+          <select
+            id="sectorEstrategico"
+            name="sectorEstrategico"
+            [(ngModel)]="newProyecto.sectorEstrategico"
+            #sectorModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione sector</option>
+            <option *ngFor="let sector of sectoresEstrategicos" [value]="sector">
+              {{ sector }}
+            </option>
+          </select>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              sectorModel.invalid &&
+              (sectorModel.dirty || sectorModel.touched)
+            "
+          >
+            <div *ngIf="sectorModel.errors?.['required']">
+              El sector es obligatorio.
+            </div>
+          </div>
+        </div>
+
+        <!-- Presupuesto 2025 -->
+        <div class="form-group">
+          <label for="presupuesto">Presupuesto 2025</label>
+          <input
+            type="number"
+            id="presupuesto"
+            name="presupuesto"
+            [(ngModel)]="newProyecto.presupuesto"
+            #presupuestoModel="ngModel"
+            required
+            min="0"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              presupuestoModel.invalid &&
+              (presupuestoModel.dirty || presupuestoModel.touched)
+            "
+          >
+            <div *ngIf="presupuestoModel.errors?.['required']">
+              El presupuesto es obligatorio.
+            </div>
+            <div *ngIf="presupuestoModel.errors?.['min']">
+              Debe ser un número mayor o igual a 0.
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipo de Participación -->
+        <div class="form-group">
+          <label for="tipoParticipacion">Tipo de Participación</label>
+          <select
+            id="tipoParticipacion"
+            name="tipoParticipacion"
+            [(ngModel)]="newProyecto.tipoParticipacion"
+            #partModel="ngModel"
+            required
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          >
+            <option value="">Seleccione tipo</option>
+            <option *ngFor="let tipoPart of tiposParticipacion" [value]="tipoPart">
+              {{ tipoPart }}
+            </option>
+          </select>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              partModel.invalid &&
+              (partModel.dirty || partModel.touched)
+            "
+          >
+            <div *ngIf="partModel.errors?.['required']">
+              El tipo de participación es obligatorio.
+            </div>
+          </div>
+        </div>
+
+        <!-- Descripción (Full-width) -->
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción del Proyecto</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            [(ngModel)]="newProyecto.descripcion"
+            #descModel="ngModel"
+            required
+            minlength="10"
+            maxlength="500"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight h-32"
+          ></textarea>
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              descModel.invalid &&
+              (descModel.dirty || descModel.touched)
+            "
+          >
+            <div *ngIf="descModel.errors?.['required']">
+              La descripción es obligatoria.
+            </div>
+            <div *ngIf="descModel.errors?.['minlength']">
+              Al menos 10 caracteres.
+            </div>
+            <div *ngIf="descModel.errors?.['maxlength']">
+              Máximo 500 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha de Inicio -->
+        <div class="form-group">
+          <label for="fechaInicio">Fecha de Inicio</label>
+          <input
+            type="date"
+            id="fechaInicio"
+            name="fechaInicio"
+            [(ngModel)]="newProyecto.fechaInicio"
+            #fechaIniModel="ngModel"
+            required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              fechaIniModel.invalid &&
+              (fechaIniModel.dirty || fechaIniModel.touched)
+            "
+          >
+            <div *ngIf="fechaIniModel.errors?.['required']">
+              La fecha de inicio es obligatoria.
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha de Fin -->
+        <div class="form-group">
+          <label for="fechaFin">Fecha de Fin</label>
+          <input
+            type="date"
+            id="fechaFin"
+            name="fechaFin"
+            [(ngModel)]="newProyecto.fechaFin"
+            #fechaFinModel="ngModel"
+            required
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              (fechaFinModel.invalid && (fechaFinModel.dirty || fechaFinModel.touched))
+              || fechasInvalidas()
+            "
+          >
+            <div *ngIf="fechaFinModel.errors?.['required']">
+              La fecha de fin es obligatoria.
+            </div>
+            <div *ngIf="fechasInvalidas()">
+              La fecha de fin no puede ser anterior a la fecha de inicio.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="cancelarEdicion()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="primary-btn"
+          [disabled]="
+            proyectoForm.form.invalid || fechasInvalidas()
+          "
+        >
+          {{ editando ? 'Actualizar Proyecto' : 'Guardar Proyecto' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-section">
+    <div class="table-container" style="position: relative;">
+      <table class="eventos-table proyectos-table">
+        <thead>
+          <tr>
+            <th (click)="sort('id')">No.</th>
+            <th (click)="sort('area')">Área</th>
+            <th (click)="sort('codigo')">Código</th>
+            <th class="titulo-column" (click)="sort('titulo')">
+              Título
+            </th>
+            <th (click)="sort('clasificacion')">Clasificación</th>
+            <th (click)="sort('tipo')">Tipo</th>
+            <th (click)="sort('sectorEstrategico')">Sector</th>
+            <th (click)="sort('presupuesto')">Presupuesto</th>
+            <th (click)="sort('tipoParticipacion')">Participación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let proyecto of paginatedProjects; let i = index">
+            <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+            <td>{{ proyecto.area }}</td>
+            <td>{{ proyecto.codigo }}</td>
+            <td class="titulo-column">{{ proyecto.titulo }}</td>
+            <td>{{ proyecto.clasificacion }}</td>
+            <td>{{ proyecto.tipo }}</td>
+            <td>{{ proyecto.sectorEstrategico }}</td>
+            <td>{{ proyecto.presupuesto | currency }}</td>
+            <td>{{ proyecto.tipoParticipacion }}</td>
+            <td class="actions-cell">
+              <div class="action-buttons">
+                <button
+                  class="icon-btn edit"
+                  (click)="editarProyecto(proyecto)"
+                  title="Editar"
+                >
+                  <span class="material-icons">edit</span>
+                </button>
+                <button
+                  class="icon-btn delete"
+                  (click)="eliminarProyecto(proyecto.id)"
+                  title="Eliminar"
+                >
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredProyectos.length === 0">
+            <td colspan="10" class="empty-state">
+              <span class="material-icons">inventory_2</span>
+              <p>No hay proyectos registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      
+
+      <!-- Modal de Confirmación de Eliminación (centrado sobre la tabla) -->
+      
+      <!-- Fin del modal -->
+    </div>
+  </div>
+</div>

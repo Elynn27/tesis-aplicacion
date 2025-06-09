@@ -1,0 +1,29 @@
+<!-- src/app/components/desagregados/desagregados.component.html -->
+<div class="p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold mb-6">Indicadores por Área</h2>
+
+  <!-- Selector de Área -->
+  <div class="mb-6">
+    <label class="block text-gray-700 font-bold mb-2">Selecciona Área:</label>
+    <select [(ngModel)]="areaSeleccionada" (change)="onAreaChange()" class="w-full p-2 border rounded-md">
+      <option *ngFor="let area of areas" [value]="area">{{ area }}</option>
+    </select>
+  </div>
+
+  <!-- Gráfico de Barras -->
+  <div *ngIf="datosGrafico.length > 0" class="bg-gray-50 p-4 rounded-lg shadow-sm">
+    <ngx-charts-bar-vertical
+      [view]="[800, 400]"
+      [results]="datosGrafico"
+      [scheme]="colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      xAxisLabel="Indicador"
+      yAxisLabel="Valor"
+      [roundDomains]="true"
+    >
+    </ngx-charts-bar-vertical>
+  </div>
+</div>

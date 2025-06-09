@@ -1,0 +1,107 @@
+<div class="expertos-container"> <!-- Usar contenedor optimizado -->
+  <div class="section-header"> <!-- Usar clase de header compacto -->
+    <h1>Gestión de Grupos Científicos</h1>
+    <button class="primary-btn" (click)="toggleFormulario()">
+      <span class="material-icons">{{ mostrarFormulario ? 'close' : 'group_add' }}</span>
+      {{ mostrarFormulario ? 'Cancelar' : 'Nuevo Grupo' }}
+    </button>
+  </div>
+
+  <!-- Formulario Compacto -->
+  <div class="form-section" *ngIf="mostrarFormulario">
+    <div class="form-grid">
+      <!-- Facultad y Año en misma fila -->
+      <div class="form-group">
+          <label for="facultad">Facultad</label>
+          <select [(ngModel)]="nuevoGrupo.facultad" name="facultad" required
+                  class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+            <option value="">Seleccione Facultad</option>
+            <option>CITEC</option>
+            <option>FTI</option>
+            <option>FTL</option>
+            <option>FTE</option>
+            <option>FIO</option>
+            <option>FCS</option>
+            
+          </select>
+        </div>
+
+
+      <div class="form-group">
+        <label>Año</label>
+        <input type="number" [(ngModel)]="nuevoGrupo.anio" class="compact-input">
+      </div>
+
+      <!-- Nombre y Carrera en misma fila -->
+      <div class="form-group">
+        <label>Nombre del Grupo</label>
+        <input type="text" [(ngModel)]="nuevoGrupo.nombre" class="compact-input">
+      </div>
+
+      <div class="form-group">
+        <label>Carrera</label>
+        <input type="text" [(ngModel)]="nuevoGrupo.carrera" class="compact-input">
+      </div>
+
+      <!-- Estudiantes (ancho completo) -->
+      <div class="form-group full-width">
+        <label>Estudiantes</label>
+        <textarea [(ngModel)]="nuevoGrupo.estudiantes" 
+                  class="compact-input"
+                  placeholder="Nombres separados por comas"
+                  rows="3"></textarea>
+      </div>
+
+      <!-- Acciones del Formulario -->
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="button" class="primary-btn" (click)="agregarGrupo()">
+          {{ grupoEditando ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla Optimizada -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th width="5%">No.</th>
+            <th>Facultad</th>
+            <th>Grupo</th>
+            <th width="8%">Año</th>
+            <th>Carrera</th>
+            <th width="15%">Acciones</th> <!-- Nueva columna -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let g of grupos; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{g.facultad}}</td>
+            <td>{{g.nombre}}</td>
+            <td>{{g.anio}}</td>
+            <td>{{g.carrera}}</td>
+            <td class="actions-cell">
+              <button class="icon-btn edit" (click)="editarGrupo(g)" title="Editar">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="icon-btn delete" (click)="eliminarGrupo(g.id)" title="Eliminar">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="grupos.length === 0">
+            <td colspan="6" class="empty-state">
+              <span class="material-icons">science</span>
+              <p>No hay grupos registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

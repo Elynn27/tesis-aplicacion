@@ -1,0 +1,52 @@
+<div class="p-6 bg-white rounded-lg shadow-md overflow-x-auto">
+  <h2 class="text-2xl font-bold mb-6">Indicadores CTI - Proceso 3</h2>
+
+  <!-- Tabla simplificada -->
+  <div class="border rounded-lg overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="p-3 text-left text-sm font-semibold min-w-[300px]">Indicador</th>
+          <th class="p-3 text-right text-sm font-semibold">Meta</th>
+          <th class="p-3 text-right text-sm font-semibold">Real</th>
+          <th class="p-3 text-right text-sm font-semibold">% Cumplimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of indicadores" class="border-t hover:bg-gray-50">
+          <td class="p-3">{{ item.indicador }}</td>
+          <td class="p-3 text-right">
+            <input type="number" 
+
+                   name="meta{{item.meta}}"
+                   [(ngModel)]="item.meta" 
+                   
+                   (change)="actualizarPorcentaje(item)"
+                   
+                   class="w-20 text-right border rounded p-1"> 
+          </td>
+          <td class="p-3 text-right">{{ item.real | valorEspecial }}</td>
+          <td class="p-3 text-right">
+            {{ item.porcentajeCumplimiento | percent:'1.2-2' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gráficos modificados -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- Gráfico de pastel: metas cumplidas vs no cumplidas -->
+    <div class="bg-gray-50 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold mb-4">Estado General de Cumplimiento</h3>
+      <ngx-charts-pie-chart
+        [view]="[1000, 400]"
+        [results]="datosCumplimiento"
+        [legend]="true"
+        [labels]="true"
+        [scheme]="colorScheme">
+      </ngx-charts-pie-chart>
+    </div>
+  </div>
+</div>

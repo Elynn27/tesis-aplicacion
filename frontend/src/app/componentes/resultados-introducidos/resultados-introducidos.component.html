@@ -1,0 +1,129 @@
+<div class="resultados-container">
+  <!-- Header -->
+  <div class="section-header">
+    <h1>Resultados Introducidos</h1>
+    <button class="primary-btn" (click)="toggleFormulario()">
+      <span class="material-icons">
+        {{ mostrarFormulario && !modoEdicion ? 'close' : 'add' }}
+      </span>
+      {{ mostrarFormulario && !modoEdicion
+          ? 'Cancelar'
+          : (modoEdicion ? 'Cancelar Edición' : 'Agregar Resultado')
+      }}
+    </button>
+  </div>
+
+  <!-- Form Section -->
+  <div *ngIf="mostrarFormulario" class="form-section">
+    <form #resultadoForm="ngForm"
+          (ngSubmit)="modoEdicion ? actualizarResultado() : agregarResultado()">
+      <div class="form-grid">
+        <!-- Área -->
+        <div class="form-group">
+          <label for="area">Área</label>
+          <select id="area" name="area" required
+                  [(ngModel)]="formModel.area"
+                  class="w-full py-2 px-3 border rounded">
+            <option value="">Seleccionar área</option>
+            <option *ngFor="let a of areas" [value]="a">{{ a }}</option>
+          </select>
+        </div>
+        <!-- Resultado -->
+        <div class="form-group">
+          <label for="resultado">Resultado Introducido</label>
+          <input id="resultado" type="text" name="resultado" required
+                 [(ngModel)]="formModel.resultado"
+                 class="w-full py-2 px-3 border rounded">
+        </div>
+        <!-- Valoración cualitativa -->
+        <div class="form-group full-width">
+          <label for="valoracionCualitativa">Valoración cualitativa</label>
+          <textarea id="valoracionCualitativa" name="valoracionCualitativa"
+                    [(ngModel)]="formModel.valoracionCualitativa"
+                    class="w-full py-2 px-3 border rounded h-24"></textarea>
+        </div>
+        <!-- Tipo de Impacto -->
+        <div class="form-group">
+          <label for="tipoImpacto">Tipo de Impacto</label>
+          <select id="tipoImpacto" name="tipoImpacto" required
+                  [(ngModel)]="formModel.tipoImpacto"
+                  class="w-full py-2 px-3 border rounded">
+            <option value="">Seleccionar tipo</option>
+            <option *ngFor="let t of tiposImpacto" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+        <!-- Valor -->
+        <div class="form-group">
+          <label for="valor">Valor</label>
+          <input id="valor" type="number" name="valor" required step="0.01"
+                 [(ngModel)]="formModel.valor"
+                 class="w-full py-2 px-3 border rounded">
+        </div>
+        <!-- Sector Estratégico -->
+        <div class="form-group">
+          <label for="sectoresEstrategicos">Sector Estratégico</label>
+          <select id="sectoresEstrategicos" name="sectoresEstrategicos" required
+                  [(ngModel)]="formModel.sectoresEstrategicos"
+                  class="w-full py-2 px-3 border rounded">
+            <option value="">Seleccionar sector</option>
+            <option *ngFor="let s of sectoresEstrategicos" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="secondary-btn" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+        <button type="submit" class="primary-btn" [disabled]="!resultadoForm.valid">
+          {{ modoEdicion ? 'Actualizar Resultado' : 'Guardar Resultado' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-section">
+    <div class="table-container">
+      <table class="eventos-table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Área</th>
+            <th>Resultado</th>
+            <th>Tipo Impacto</th>
+            <th>Valoración</th>
+            <th>Valor</th>
+            <th>Sector</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of datos; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ r.area }}</td>
+            <td>{{ r.resultado }}</td>
+            <td>{{ r.tipoImpacto }}</td>
+            <td>{{ r.valoracionCualitativa || '-' }}</td>
+            <td>{{ r.valor | currency }}</td>
+            <td>{{ r.sectoresEstrategicos }}</td>
+            <td class="actions-cell">
+              <button class="icon-btn edit" (click)="iniciarEdicion(r)" title="Editar">
+                <span class="material-icons">edit</span>
+              </button>
+              <button class="icon-btn delete" (click)="eliminarResultado(r.id!)" title="Eliminar">
+                <span class="material-icons">delete</span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="datos.length === 0">
+            <td colspan="8" class="empty-state">
+              <span class="material-icons">done_all</span>
+              <p>No hay resultados registrados</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
